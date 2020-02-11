@@ -1,17 +1,6 @@
 const chalk = require("chalk");
-const fs = require("fs");
 const yargs = require("yargs");
-
-const loadNotes = () => {
-  try {
-    const dataBuffer = fs.readFileSync("notes.json");
-    return JSON.parse(dataBuffer.toString());
-  } catch (err) {
-    return {
-      notes: []
-    };
-  }
-};
+const notesFunc = require("./notes");
 
 yargs.command(
   "add",
@@ -32,29 +21,12 @@ yargs.command(
       });
   },
   argv => {
-    const oldNotes = loadNotes();
-
-    const newNotes = {
-      notes: [
-        ...oldNotes.notes,
-        {
-          title: argv.title,
-          body: argv.body
-        }
-      ]
-    };
-
-    fs.writeFileSync("notes.json", JSON.stringify(newNotes));
-
-    console.log(chalk.green("Success!"));
+    notesFunc.addNotes(argv);
   }
 ).argv;
 
 yargs.command("list", "List all notes", {}, () => {
-  const notes = loadNotes();
-  notes.notes.map((note, index) => {
-    console.log(`Nota ${index} -> ${note.title}`);
-  });
+  notesFunc.listNotes();
 }).argv;
 
 yargs.command(
@@ -69,8 +41,22 @@ yargs.command(
     }
   },
   ({ title }) => {
-    const notes = loadNotes();
-    const selectedNote = notes.notes.filter(note => note.title === title);
-    console.log(chalk.black.bgGreen(selectedNote[0].body));
+    notesFunc.readSingleNote(title);
+  }
+).argv;
+
+yargs.command(
+  "remove",
+  "Remove note",
+  {
+    title: {
+      alias: "t",
+      describe: "The note's title",
+      demand: true,
+      type: "string"
+    }
+  },
+  ({ title }) => {
+    notesFunc.removeNote(title);
   }
 ).argv;
