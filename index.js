@@ -3,8 +3,14 @@ const fs = require("fs");
 const yargs = require("yargs");
 
 const loadNotes = () => {
-  const dataBuffer = fs.readFileSync("notes.json");
-  return JSON.parse(dataBuffer.toString());
+  try {
+    const dataBuffer = fs.readFileSync("notes.json");
+    return JSON.parse(dataBuffer.toString());
+  } catch (err) {
+    return {
+      notes: []
+    };
+  }
 };
 
 yargs.command(
