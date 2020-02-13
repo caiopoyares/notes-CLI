@@ -51,7 +51,7 @@ yargs.command(
   {
     title: {
       alias: "t",
-      describe: "The note's title",
+      describe: "Note's title",
       demand: true,
       type: "string"
     }
