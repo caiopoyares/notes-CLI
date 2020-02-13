@@ -24,6 +24,7 @@ const saveNotes = notes => {
 const addNotes = argv => {
   const oldNotes = loadNotes();
   if (oldNotes.notes.filter(note => note.title === argv.title).length > 0) {
+    debugger;
     console.log(chalk.bgRed("The note title already exists."));
     return;
   }
